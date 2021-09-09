@@ -29,6 +29,11 @@ it is not meant to be persistent if using more than 1 account.
 Daniel Llewellyn
 Pete Freitag
 
+0.9 -CHANGE LOG- 9/9/2021
+- fix - updated parameters for newer API versions (portalURL and loginURL)
+- fix - adjusted search values when parsing XML data in parseQueryXML to reflect new return format by SalesForce
+- fix - added logic to check for the existance of columns (fields) and add if not present before setting values
+
 0.8 -CHANGE LOG- 2/2/2010
 - enhancement - unpaged queries with queryObject using disablePagination param
 - enhancement - batchSize default removed from queryObject for better performance
