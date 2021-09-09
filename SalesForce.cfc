@@ -3,8 +3,8 @@
 	<cffunction name="init" access="public" output="false" returntype="SalesForce">
 		<cfargument name="username" type="string" required="true" />
 		<cfargument name="password" type="string" required="true" />
-		<cfargument name="loginURL" type="string" required="false" default="https://www.salesforce.com/services/Soap/u/11.1" />
-		<cfargument name="portalURL" type="string" required="false" default="https://na3.salesforce.com" />
+		<cfargument name="loginURL" type="string" required="false" default="https://www.salesforce.com/services/Soap/c/52.0" />
+		<cfargument name="portalURL" type="string" required="false" default="https://yourURL.salesforce.com" />
 		<cfargument name="soapTimeout" type="numeric" required="false" default="60" />
 		<cfargument name="autoLogin" type="boolean" required="false" default="true" />
 		
@@ -849,13 +849,13 @@
 		
 		<cftry>
 			<!--- get query size --->
-			<cfset stLocal.totalRecords = xmlSearch(arguments.soapXML, "//*[name()='ns1:size']") />
+			<cfset stLocal.totalRecords = xmlSearch(arguments.soapXML, "//*[name()='size']") />
 			<!--- return size of query --->
 			<cfset stReturn.size = val(stLocal.totalRecords[1].XmlText)>
 			
 			<!--- if valid size set values --->
 			<cfif arrayLen(stLocal.totalRecords)>
-				<cfset stLocal.records = xmlSearch(arguments.soapXML, "//*[name()='ns1:records']") />
+				<cfset stLocal.records = xmlSearch(arguments.soapXML, "//*[name()='records']") />
 				<!--- if records found build query --->
 				<cfif arraylen(stLocal.records)>
 					<!--- create list of columns for query --->
@@ -893,6 +893,10 @@
 									<cfset querySetCell(stReturn.results,stLocal.subFieldName,stLocal.subFieldList[stLocal.iField]) />
 								</cfloop>
 							<cfelse>
+								<cfset stLocal.fieldName = listLast(stLocal.records[stLocal.iRecord].xmlChildren[stLocal.iColValue].xmlName,':') />
+								<cfif not listFindNoCase(stReturn.results.columnList,stLocal.fieldName)>
+									<cfset queryAddColumn(stReturn.results,stLocal.fieldName,arrayNew(1)) />
+                						</cfif>
 								<cfset querySetCell(stReturn.results,listLast(stLocal.records[stLocal.iRecord].xmlChildren[stLocal.iColValue].xmlName,':'),stLocal.records[stLocal.iRecord].xmlChildren[stLocal.iColValue].xmlText) />				
 							</cfif>
 						</cfloop>
